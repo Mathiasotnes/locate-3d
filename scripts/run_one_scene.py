@@ -16,6 +16,9 @@
 import subprocess
 import sys
 
+from locate3d_data.locate3d_dataset import Locate3DDataset
+from models.locate_3d import Locate3D, downsample
+
 
 ###############################################
 # Config
@@ -30,6 +33,8 @@ SCENE_INDEX     = 0 # Corresponds to video_id "42445211" in ARKitScenes
 # Main script
 
 if __name__ == "__main__":
+    
+    # Preprocessing
     cmd = [
         sys.executable, "-m", "preprocessing.run_preprocessing",
         "--l3dd_annotations_fpath", ANNOTATIONS,
@@ -42,3 +47,24 @@ if __name__ == "__main__":
     print(" ".join(cmd))
     completed_process = subprocess.run(cmd, check=True)
     print(f"Process finished with return code {completed_process.returncode}")
+    
+    # Locate3D inference
+    dataset = Locate3DDataset(
+        annotations_fpath="locate3d_data/dataset/train_arkitscenes.json",
+        return_featurized_pointcloud=True,
+        arkitscenes_data_dir=ARKIT_DIR,
+    )
+
+    model = Locate3D.from_pretrained("facebook/locate-3d")
+    data = dataset[0]
+
+    # Downsample pointcloud (optional) (test with first)
+    data["featurized_sensor_pointcloud"] = downsample(
+        data["featurized_sensor_pointcloud"], 30000
+    )
+
+    output = model.inference(
+        data["featurized_sensor_pointcloud"], data["lang_data"]["text_caption"]
+    )
+    
+    print("Model output:", output)
