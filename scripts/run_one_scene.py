@@ -6,7 +6,7 @@
 # Usage:
 #   git clone https://github.com/apple/ARKitScenes.git
 #   cd ARKitScenes
-#   python3 download_data.py 3dod --split Training --video_id 42445211 --download_dir /data/arkitscenes
+#   python download_data.py 3dod --split Training --video_id 42445211 --download_dir /home/motnes/work/data/arkitscenes
 #   cd ../locate-3d
 #   python3 scripts/run_one_scene.py
 # ---------------------
@@ -23,7 +23,7 @@ from models.locate_3d import Locate3D, downsample
 ###############################################
 # Config
 
-ARKIT_DIR       = "/data/arkitscenes"
+ARKIT_DIR       = "../data/arkitscenes"
 ANNOTATIONS     = "locate3d_data/dataset/train_arkitscenes.json"
 CACHE_PATH      = "cache"
 SCENE_INDEX     = 0 # Corresponds to video_id "42445211" in ARKitScenes
