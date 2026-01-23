@@ -52,11 +52,13 @@ def preprocess_scenes(args, start_idx, end_idx):
     pointcloud_featurizer_dino = FeatureLifter3D(pointcloud_featurizer_dino_cfg)
 
     # Iterate through the dataset and cache the featurized pointclouds
+    print(f"Preprocessing scenes from index {start_idx} to {end_idx}...")
     for idx in range(start_idx, end_idx):
         # Load a sample from the dataset
         scene_dataset = scene_list[idx][0]
         scene_id = scene_list[idx][1]
         frames_used = scene_list[idx][2]
+        print(f"Preprocessing scene {idx}: {scene_id} from {scene_dataset}")
 
         # Early skip if the scene is already cached
         if frames_used is None:
