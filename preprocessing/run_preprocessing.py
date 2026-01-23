@@ -40,6 +40,7 @@ def preprocess_scenes(args, start_idx, end_idx):
         arkitscenes_data_dir=args.arkitscenes_data_dir,
     )
     scene_list = sorted(l3dd.list_scenes())
+    print(f"Total number of scenes to preprocess: {len(scene_list)}")
 
     pointcloud_featurizer_clip_cfg = OmegaConf.load(
         os.path.join(SCRIPT_DIR, "config/clip.yaml")
@@ -75,8 +76,10 @@ def preprocess_scenes(args, start_idx, end_idx):
         camera_views = l3dd.get_camera_views(*scene_list[idx])
 
         # Build CLIP featurized pointcloud
+        print("  - Generating CLIP features...")
         clip_pcd = pointcloud_featurizer_clip.lift_frames(camera_views)
         torch.manual_seed(0)  # seed the RNG so that the pointclouds are the same
+        print("  - Generating DINO features...")
         dino_pcd = pointcloud_featurizer_dino.lift_frames(camera_views)
 
         # Creating output dictionary
